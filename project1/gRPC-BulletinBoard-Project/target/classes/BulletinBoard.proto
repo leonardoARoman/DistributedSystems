@@ -1,0 +1,55 @@
+syntax = "proto3";
+package com.bulletinboard;
+option java_multiple_files = true;
+
+// Implement ProtoFile Here
+
+/*
+	SERVICE TO GENERATE A SERVICE CLASS OR STUB
+	WITH ITS RPC METHODS AND RESPECTIVE ARGUMENTS
+	gRPC REQUESTS AND RESPONSES TYPES.
+*/
+service BulletinBoard {
+
+	// Accept all incoming posts from all connected clients.
+	rpc post (Post) returns (ServerResponse) {}
+	// Request a post from server by name
+	rpc get (RequestPost) returns (ServerResponse) {}
+	// Display all posts in bolleting to the client.
+	rpc list (RequestPostList) returns (stream Post) {}
+	// Request to delete a post from server
+	rpc delete (RequestPost) returns (ServerResponse) {}
+}
+
+/*
+	DEFINE THE REQUEST/RESPONSE MESSAGES FOR 
+	THE IMPLEMENTED SERVICE. THE proto FILE
+	WILL GENERATE CLASSES FOR EACH MESSAGE
+*/
+message Post {
+	string title = 1;
+	string body = 2;
+}
+
+message ServerResponse {
+	string message = 1;
+}
+
+message RequestPost {
+	string title = 1;
+}
+
+message RequestPostList {}
+
+message PostList {
+	string clientName = 1;
+	repeated Post posts = 2;
+	map<int32, Post> client = 3;
+}
+
+
+/*
+	SERVER-SIDE STREAMING RPC IS NEEDED IN ORDER
+	TO SEND THE CLIENT ALL BULLETING POSTS AS
+	RESPONSE TO THE GET POSTS METHOD REQUIREMENT
+*/
